@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  localstack:
+    image: localstack/localstack
+    container_name: localstack
+    ports:
+      - "4566:4566"  # LocalStack Gateway for all services
+      - "4567:4567"  # DynamoDB
+      - "4568:4568"  # S3
+      - "4569:4569"  # SQS
+    environment:
+      - SERVICES=dynamodb,s3,sqs # Enable S3, DynamoDB, and SQS
+      - DEBUG=1
+      - AWS_ACCESS_KEY_ID=test  # Default credentials for LocalStack
+      - AWS_SECRET_ACCESS_KEY=test  # Default credentials for LocalStack
+    volumes:
+      - "./localstack/:/docker-entrypoint-initials.d/"
+      - "./localstack_data:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock" # Mounts the docker socket
+
+volumes:
+  localstack_data:
